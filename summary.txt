@@ -1,0 +1,5 @@
+Completed the remaining tasks on the "Left to Do" list:
+1.  **Evidence Board Visuals & SFX:** Added dynamic, animated SVG "red strings" connecting clues on the Evidence Board using DOM coordinates mapping. Hooked up `AudioEngine.playBeep()` when selecting clues and `AudioEngine.playSuccess()` when successfully linking them.
+2.  **Chat SFX & Unread Counter:** Updated the `Chat` component to emit `AudioEngine.playChatPing()` whenever a new message arrives from the other detective or the system. Also added an unread badge indicator to the chat bubble button if the chat window is closed.
+3.  **Suspect Unlocking & Dramatic Effects:** Added a dramatic `crt-flicker` and blur reveal animation to the Suspect profile when selected. Hooked up `playScan()` on selecting a valid suspect and `playBeep()` as an error tone when trying to click a locked suspect.
+4.  **Final Accusation Sequence:** Created a new custom `AudioEngine.playAccuse()` generator that plays a low, ominous thud. Added dramatic entrance animations to the Accusation screen and added a delay so the ominous sound finishes before triggering the final redirect to the Summary screen.
