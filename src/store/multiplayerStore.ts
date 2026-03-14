@@ -7,9 +7,13 @@ interface MultiplayerState {
   isConnected: boolean;
   messages: { sender: string; text: string }[];
   playerId: 'player1' | 'player2' | null;
+  /** True when the player is in single-player solo mode (no socket) */
+  isSolo: boolean;
   /** The suspect ID that the partner just accused (triggers co-op confirm flow) */
   partnerAccusedId: string | null;
   connect: (roomId: string, playerId: 'player1' | 'player2', requestedCaseId?: string, onRoomInfo?: (caseId: string) => void) => void;
+  /** Enter solo mode — no socket, no room, player1 sees all clues */
+  setSoloMode: () => void;
   disconnect: () => void;
   sendMessage: (text: string) => void;
   addMessage: (msg: { sender: string; text: string }) => void;
@@ -26,7 +30,18 @@ export const useMultiplayerStore = create<MultiplayerState>((set, get) => ({
   isConnected: false,
   messages: [],
   playerId: null,
+  isSolo: false,
   partnerAccusedId: null,
+
+  setSoloMode: () => {
+    // Tear down any existing socket
+    const existing = get().socket;
+    if (existing) {
+      existing.removeAllListeners();
+      existing.disconnect();
+    }
+    set({ socket: null, roomId: null, isConnected: false, playerId: 'player1', isSolo: true });
+  },
 
   connect: (roomId, playerId, requestedCaseId, onRoomInfo) => {
     // Prevent duplicate connections — tear down any existing socket first.
@@ -107,6 +122,7 @@ export const useMultiplayerStore = create<MultiplayerState>((set, get) => ({
       isConnected: false,
       messages: [],
       playerId: null,
+      isSolo: false,
       partnerAccusedId: null,
     });
   },

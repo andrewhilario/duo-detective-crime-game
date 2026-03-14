@@ -3,12 +3,14 @@ import React, { useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCaseStore } from '../../../../store/caseStore';
+import { useMultiplayerStore } from '../../../../store/multiplayerStore';
 import { CheckCircle2, XCircle, ArrowLeft, Shield, Link2, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SuspectAvatar } from '../../../../components/SuspectAvatar';
 
 function SummaryContent({ id }: { id: string }) {
   const { activeCase, loadCase, foundClues, boardConnections } = useCaseStore();
+  const { isSolo } = useMultiplayerStore();
   const searchParams = useSearchParams();
   const accusedId = searchParams.get('suspect');
 
@@ -56,7 +58,7 @@ function SummaryContent({ id }: { id: string }) {
           </h1>
           <p className="text-gray-300 max-w-md leading-relaxed">
             {isCorrect ? (
-              <>Excellent work, Detectives. You correctly identified <strong className="text-white">{accusedSuspect?.name}</strong> as the culprit. Justice is served.</>
+              <>Excellent work, {isSolo ? 'Detective' : 'Detectives'}. You correctly identified <strong className="text-white">{accusedSuspect?.name}</strong> as the culprit. Justice is served.</>
             ) : accusedSuspect ? (
               <>A grave error. <strong className="text-white">{accusedSuspect.name}</strong> was innocent. The true killer — <strong className="text-red-300">{trueCulprit?.name}</strong> — walks free.</>
             ) : (

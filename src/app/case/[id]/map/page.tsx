@@ -13,7 +13,7 @@ import { AudioEngine } from '../../../../utils/sfx';
 export default function InvestigationMap({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params);
   const { activeCase, loadCase, foundClues, findClue } = useCaseStore();
-  const { playerId } = useMultiplayerStore();
+  const { playerId, isSolo } = useMultiplayerStore();
   const { setGameStatus } = useSessionStore();
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [examiningClue, setExaminingClue] = useState<Clue | null>(null);
@@ -38,7 +38,7 @@ export default function InvestigationMap({ params }: { params: Promise<{ id: str
     setExaminingClue(null);
     
     const cluesAtLocation = activeCase.clues.filter(
-      c => c.location === location && (c.visibleTo === 'all' || c.visibleTo === playerId)
+      c => c.location === location && (isSolo || c.visibleTo === 'all' || c.visibleTo === playerId)
     );
     setTimeout(() => {
       setIsScanning(false);
@@ -58,7 +58,7 @@ export default function InvestigationMap({ params }: { params: Promise<{ id: str
 
   const visibleClues = activeCase.clues.filter(c => 
     c.location === selectedLocation && 
-    (c.visibleTo === 'all' || c.visibleTo === playerId)
+    (isSolo || c.visibleTo === 'all' || c.visibleTo === playerId)
   );
 
   return (
@@ -91,7 +91,7 @@ export default function InvestigationMap({ params }: { params: Promise<{ id: str
             {activeCase.locations.map(loc => {
               // Clues this player can see at this location
               const playerCluesHere = activeCase.clues.filter(
-                c => c.location === loc && (c.visibleTo === 'all' || c.visibleTo === playerId)
+                c => c.location === loc && (isSolo || c.visibleTo === 'all' || c.visibleTo === playerId)
               );
               const allFound = playerCluesHere.length > 0 &&
                 playerCluesHere.every(c => foundClues.includes(c.id));
@@ -237,11 +237,13 @@ export default function InvestigationMap({ params }: { params: Promise<{ id: str
                             className="col-span-2 flex flex-col items-center justify-center h-40 text-gray-500"
                           >
                             <Search size={32} className="mb-2 opacity-50" />
-                            <p>No actionable clues found here... yet.</p>
-                            {playerId === 'player1' ? (
-                              <p className="text-xs mt-2">Perhaps Detective B can spot something.</p>
-                            ) : (
-                              <p className="text-xs mt-2">Perhaps Detective A can spot something.</p>
+                            <p>No actionable clues found here.</p>
+                             {!isSolo && (
+                              playerId === 'player1' ? (
+                                <p className="text-xs mt-2">Perhaps Detective B can spot something.</p>
+                              ) : (
+                                <p className="text-xs mt-2">Perhaps Detective A can spot something.</p>
+                              )
                             )}
                           </motion.div>
                         )}

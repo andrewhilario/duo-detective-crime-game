@@ -16,7 +16,7 @@ export default function AccusationPage({ params }: { params: Promise<{ id: strin
   const { id } = React.use(params);
   const { activeCase, loadCase, unlockedSuspects } = useCaseStore();
   const { setGameStatus } = useSessionStore();
-  const { emitAccuse, partnerAccusedId, clearPartnerAccused } = useMultiplayerStore();
+  const { emitAccuse, partnerAccusedId, clearPartnerAccused, isSolo } = useMultiplayerStore();
   const [selectedSuspectId, setSelectedSuspectId] = useState<string | null>(null);
   const [phase, setPhase] = useState<Phase>('picking');
   const router = useRouter();
@@ -61,6 +61,13 @@ export default function AccusationPage({ params }: { params: Promise<{ id: strin
   const handleAccuse = () => {
     if (!selectedSuspectId) return;
     AudioEngine.playBeep();
+
+    // Solo mode: skip co-op flow entirely
+    if (isSolo) {
+      doRedirect(selectedSuspectId);
+      return;
+    }
+
     emitAccuse(selectedSuspectId);
 
     if (partnerAccusedId) {
@@ -106,10 +113,20 @@ export default function AccusationPage({ params }: { params: Promise<{ id: strin
       <div className="mb-4 w-full max-w-2xl bg-gray-900/80 border border-gray-700 rounded-lg px-4 py-2.5 flex items-start gap-3 text-xs text-gray-400 leading-relaxed">
         <span className="text-orange-400 text-base mt-0.5 shrink-0">⚖️</span>
         <span>
-          <strong className="text-gray-200">Both detectives must confirm before the case is closed.</strong>{' '}
-          If you agree on a suspect the verdict is filed jointly. If you disagree, you can proceed with your own report or adopt your partner&apos;s pick.{' '}
-          <span className="text-red-400 font-semibold">This action is irreversible</span>
-          <span className="text-gray-500"> — review all evidence carefully before committing.</span>
+          {isSolo ? (
+            <>
+              <strong className="text-gray-200">Select the suspect you believe is guilty.</strong>{' '}
+              <span className="text-red-400 font-semibold">This action is irreversible</span>
+              <span className="text-gray-500"> — review all evidence carefully before committing.</span>
+            </>
+          ) : (
+            <>
+              <strong className="text-gray-200">Both detectives must confirm before the case is closed.</strong>{' '}
+              If you agree on a suspect the verdict is filed jointly. If you disagree, you can proceed with your own report or adopt your partner&apos;s pick.{' '}
+              <span className="text-red-400 font-semibold">This action is irreversible</span>
+              <span className="text-gray-500"> — review all evidence carefully before committing.</span>
+            </>
+          )}
         </span>
       </div>
 
@@ -215,7 +232,7 @@ export default function AccusationPage({ params }: { params: Promise<{ id: strin
             >
               <h1 className="text-4xl font-bold text-white tracking-widest uppercase">Make Your Accusation</h1>
               <p className="text-gray-400 max-w-lg leading-relaxed">
-                Both detectives must confirm before the case is closed. Choose carefully.
+                {isSolo ? 'Choose your suspect carefully. There is no going back.' : 'Both detectives must confirm before the case is closed. Choose carefully.'}
               </p>
 
               {/* Partner hint */}

@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Duo Detective
 
-## Getting Started
+A cooperative two-player browser-based crime investigation game. Both players connect in real time, investigate different clues, and must agree on a final accusation to close the case.
 
-First, run the development server:
+---
+
+## Table of Contents
+
+1. [How the app works](#how-the-app-works)
+2. [Local development](#local-development)
+3. [Deployment](#deployment)
+
+---
+
+## How the app works
+
+- **Frontend + Backend in one process** — `server.mjs` starts both the Next.js app and the Socket.io WebSocket server together on port `3000`.
+- **No database** — rooms and game state are held in memory. Restarting the server clears all active sessions.
+- **`NEXT_PUBLIC_SOCKET_URL`** — this environment variable tells the browser where to connect the WebSocket. It must be set to your public domain **before** running `npm run build` because Next.js bakes it into the client bundle at build time.
+
+---
+
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
 
-## Learn More
+For full instructions on deploying to an Ubuntu home server with Cloudflare Tunnel, see [DEPLOYMENT.md](DEPLOYMENT.md).
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

@@ -4,10 +4,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMultiplayerStore } from '../store/multiplayerStore';
 import { useSessionStore } from '../store/sessionStore';
+import { useCaseStore } from '../store/caseStore';
 import { allCases } from '../data/cases';
 import { AudioEngine } from '../utils/sfx';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, ChevronRight, Radio, Lock, BookOpen } from 'lucide-react';
+import { Shield, ChevronRight, Radio, Lock, BookOpen, Users, User } from 'lucide-react';
 
 const DIFFICULTY_COLORS = {
   Easy: 'text-green-400 border-green-800 bg-green-900/20',
@@ -15,14 +16,18 @@ const DIFFICULTY_COLORS = {
   Hard: 'text-red-400 border-red-800 bg-red-900/20',
 };
 
+type GameMode = 'coop' | 'solo';
+
 export default function Lobby() {
   const [roomId, setRoomId] = useState('');
   const [name, setName] = useState('');
   const [role, setRole] = useState<'player1' | 'player2'>('player1');
   const [selectedCaseId, setSelectedCaseId] = useState<string>(allCases[0].id);
+  const [mode, setMode] = useState<GameMode>('coop');
   const router = useRouter();
-  const { connect } = useMultiplayerStore();
+  const { connect, setSoloMode } = useMultiplayerStore();
   const { setPlayerName, setGameStatus } = useSessionStore();
+  const { loadCase } = useCaseStore();
 
   const selectedCase = allCases.find(c => c.id === selectedCaseId)!;
 
@@ -37,6 +42,18 @@ export default function Lobby() {
         router.push(`/case/${caseId}/briefing`);
       });
     }
+  };
+
+  const handleSolo = (e: React.FormEvent) => {
+    e.preventDefault();
+    AudioEngine.init();
+    AudioEngine.playBeep();
+    if (!name) return;
+    setPlayerName(name);
+    loadCase(selectedCaseId);
+    setSoloMode();
+    setGameStatus('briefing');
+    router.push(`/case/${selectedCaseId}/briefing`);
   };
 
   return (
@@ -150,65 +167,138 @@ export default function Lobby() {
               </motion.div>
             </AnimatePresence>
 
-            {/* Join form */}
-            <div className="bg-[#1A1C22] border border-gray-800 rounded-xl p-5">
-              <div className="flex items-center gap-2 mb-4 pb-4 border-b border-gray-800">
-                <Lock size={14} className="text-red-500" />
-                <h2 className="font-bold text-white tracking-widest uppercase text-sm">Join Investigation</h2>
-              </div>
-              <form onSubmit={handleJoin} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Detective Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition text-sm"
-                    placeholder="e.g. Holmes"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Room Code</label>
-                  <input
-                    type="text"
-                    required
-                    value={roomId}
-                    onChange={(e) => setRoomId(e.target.value)}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition text-sm font-mono"
-                    placeholder="Both players enter the same code"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Role</label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setRole('player1')}
-                      className={`py-2.5 rounded-lg border text-sm font-semibold transition ${role === 'player1' ? 'bg-red-900/40 border-red-600 text-red-200' : 'bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-500'}`}
-                    >
-                      Detective A
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setRole('player2')}
-                      className={`py-2.5 rounded-lg border text-sm font-semibold transition ${role === 'player2' ? 'bg-red-900/40 border-red-600 text-red-200' : 'bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-500'}`}
-                    >
-                      Detective B
-                    </button>
-                  </div>
-                  <p className="text-xs text-gray-600 mt-1.5">Each role sees different clues.</p>
-                </div>
-
+            {/* Mode toggle + form */}
+            <div className="bg-[#1A1C22] border border-gray-800 rounded-xl overflow-hidden">
+              {/* Mode tabs */}
+              <div className="grid grid-cols-2 border-b border-gray-800">
                 <button
-                  type="submit"
-                  className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 tracking-widest uppercase text-sm"
+                  type="button"
+                  onClick={() => setMode('coop')}
+                  className={`flex items-center justify-center gap-2 py-3 text-sm font-semibold transition ${
+                    mode === 'coop'
+                      ? 'bg-red-900/20 text-red-300 border-b-2 border-red-500'
+                      : 'text-gray-500 hover:text-gray-300'
+                  }`}
                 >
-                  Open Case File <ChevronRight size={16} />
+                  <Users size={14} /> Co-op
                 </button>
-              </form>
+                <button
+                  type="button"
+                  onClick={() => setMode('solo')}
+                  className={`flex items-center justify-center gap-2 py-3 text-sm font-semibold transition ${
+                    mode === 'solo'
+                      ? 'bg-blue-900/20 text-blue-300 border-b-2 border-blue-500'
+                      : 'text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  <User size={14} /> Solo
+                </button>
+              </div>
+
+              <div className="p-5">
+                <div className="flex items-center gap-2 mb-4 pb-4 border-b border-gray-800">
+                  <Lock size={14} className="text-red-500" />
+                  <h2 className="font-bold text-white tracking-widest uppercase text-sm">
+                    {mode === 'coop' ? 'Join Investigation' : 'Solo Investigation'}
+                  </h2>
+                </div>
+
+                <AnimatePresence mode="wait">
+                  {mode === 'coop' ? (
+                    <motion.form
+                      key="coop-form"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      onSubmit={handleJoin}
+                      className="space-y-4"
+                    >
+                      <div>
+                        <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Detective Name</label>
+                        <input
+                          type="text"
+                          required
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition text-sm"
+                          placeholder="e.g. Holmes"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Room Code</label>
+                        <input
+                          type="text"
+                          required
+                          value={roomId}
+                          onChange={(e) => setRoomId(e.target.value)}
+                          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition text-sm font-mono"
+                          placeholder="Both players enter the same code"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Role</label>
+                        <div className="grid grid-cols-2 gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setRole('player1')}
+                            className={`py-2.5 rounded-lg border text-sm font-semibold transition ${role === 'player1' ? 'bg-red-900/40 border-red-600 text-red-200' : 'bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-500'}`}
+                          >
+                            Detective A
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setRole('player2')}
+                            className={`py-2.5 rounded-lg border text-sm font-semibold transition ${role === 'player2' ? 'bg-red-900/40 border-red-600 text-red-200' : 'bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-500'}`}
+                          >
+                            Detective B
+                          </button>
+                        </div>
+                        <p className="text-xs text-gray-600 mt-1.5">Each role sees different clues.</p>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 tracking-widest uppercase text-sm"
+                      >
+                        Open Case File <ChevronRight size={16} />
+                      </button>
+                    </motion.form>
+                  ) : (
+                    <motion.form
+                      key="solo-form"
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      onSubmit={handleSolo}
+                      className="space-y-4"
+                    >
+                      <p className="text-xs text-gray-500 leading-relaxed">
+                        Play alone with access to all clues. No partner required.
+                      </p>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Detective Name</label>
+                        <input
+                          type="text"
+                          required
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-sm"
+                          placeholder="e.g. Holmes"
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 tracking-widest uppercase text-sm"
+                      >
+                        Begin Solo Investigation <ChevronRight size={16} />
+                      </button>
+                    </motion.form>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -216,3 +306,4 @@ export default function Lobby() {
     </div>
   );
 }
+

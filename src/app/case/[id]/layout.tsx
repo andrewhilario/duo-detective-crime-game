@@ -14,7 +14,7 @@ interface Toast {
 
 export default function CaseLayout({ children, params }: { children: React.ReactNode, params: Promise<{ id: string }> }) {
   const { id } = React.use(params);
-  const { socket, roomId, playerId } = useMultiplayerStore();
+  const { socket, roomId, playerId, isSolo } = useMultiplayerStore();
   const { activeCase, foundClues, unlockedSuspects, boardConnections, syncState } = useCaseStore();
   const [toasts, setToasts] = useState<Toast[]>([]);
   const toastIdRef = useRef(0);
@@ -85,28 +85,30 @@ export default function CaseLayout({ children, params }: { children: React.React
       <main className="flex-1 container mx-auto p-4 flex flex-col relative overflow-hidden">
         {children}
       </main>
-      <Chat />
+      {!isSolo && <Chat />}
 
       {/* Partner toast notifications */}
-      <div className="fixed bottom-24 right-4 z-50 flex flex-col gap-2 pointer-events-none">
-        <AnimatePresence>
-          {toasts.map(toast => (
-            <motion.div
-              key={toast.id}
-              initial={{ opacity: 0, x: 60, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 60, scale: 0.9 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-              className="flex items-center gap-3 bg-gray-800 border border-yellow-700/60 shadow-xl rounded-xl px-4 py-3 text-sm text-white max-w-xs"
-            >
-              <div className="w-7 h-7 rounded-full bg-yellow-900/50 flex items-center justify-center shrink-0">
-                <Search size={14} className="text-yellow-400" />
-              </div>
-              <span>{toast.message}</span>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+      {!isSolo && (
+        <div className="fixed bottom-24 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+          <AnimatePresence>
+            {toasts.map(toast => (
+              <motion.div
+                key={toast.id}
+                initial={{ opacity: 0, x: 60, scale: 0.9 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: 60, scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                className="flex items-center gap-3 bg-gray-800 border border-yellow-700/60 shadow-xl rounded-xl px-4 py-3 text-sm text-white max-w-xs"
+              >
+                <div className="w-7 h-7 rounded-full bg-yellow-900/50 flex items-center justify-center shrink-0">
+                  <Search size={14} className="text-yellow-400" />
+                </div>
+                <span>{toast.message}</span>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      )}
     </div>
   );
 }
