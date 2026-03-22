@@ -156,10 +156,9 @@ export default function EvidenceBoard({ params }: { params: Promise<{ id: string
   const isDraggingRef = useRef(false);
 
   useEffect(() => {
-    if (!activeCase) loadCase(id);
+    if (activeCase?.id !== id) loadCase(id);
     setGameStatus('investigation');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeCase?.id, id, loadCase, setGameStatus]);
 
   // Escape cancels active selection
   useEffect(() => {

@@ -20,12 +20,11 @@ export default function InvestigationMap({ params }: { params: Promise<{ id: str
   const [isScanning, setIsScanning] = useState(false);
 
   useEffect(() => {
-    if (!activeCase) {
+    if (activeCase?.id !== id) {
       loadCase(id);
     }
     setGameStatus('investigation');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeCase?.id, id, loadCase, setGameStatus]);
 
   if (!activeCase) return <div className="text-center mt-20">Loading Map...</div>;
 

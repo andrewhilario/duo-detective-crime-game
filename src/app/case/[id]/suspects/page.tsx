@@ -16,10 +16,9 @@ export default function Suspects({ params }: { params: Promise<{ id: string }> }
   const [selectedSuspect, setSelectedSuspect] = useState<Suspect | null>(null);
 
   useEffect(() => {
-    if (!activeCase) loadCase(id);
+    if (activeCase?.id !== id) loadCase(id);
     setGameStatus('investigation');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeCase?.id, id, loadCase, setGameStatus]);
 
   if (!activeCase) return <div className="text-center mt-20">Loading Suspects...</div>;
 

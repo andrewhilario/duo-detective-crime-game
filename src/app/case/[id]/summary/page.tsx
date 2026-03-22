@@ -15,7 +15,7 @@ function SummaryContent({ id }: { id: string }) {
   const accusedId = searchParams.get('suspect');
 
   useEffect(() => {
-    if (!activeCase) loadCase(id);
+    if (activeCase?.id !== id) loadCase(id);
   }, [activeCase, loadCase, id]);
 
   if (!activeCase) return <div className="text-center mt-20 text-gray-400">Loading Summary...</div>;

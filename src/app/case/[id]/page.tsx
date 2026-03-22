@@ -9,7 +9,7 @@ export default function CaseHub({ params }: { params: Promise<{ id: string }> })
   const { activeCase, loadCase } = useCaseStore();
 
   useEffect(() => {
-    if (!activeCase) {
+    if (activeCase?.id !== id) {
       loadCase(id);
     }
   }, [activeCase, loadCase, id]);

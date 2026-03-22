@@ -27,9 +27,9 @@ export default function AccusationPage({ params }: { params: Promise<{ id: strin
   selectedRef.current = selectedSuspectId;
 
   useEffect(() => {
-    if (!activeCase) loadCase(id);
+    if (activeCase?.id !== id) loadCase(id);
     setGameStatus('accusation');
-  }, [activeCase, loadCase, id, setGameStatus]);
+  }, [activeCase?.id, id, loadCase, setGameStatus]);
 
   const doRedirect = (suspectId: string) => {
     AudioEngine.playAccuse();

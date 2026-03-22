@@ -48,6 +48,7 @@ export const useCaseStore = create<CaseState>((set, get) => ({
       foundClues: [],
       unlockedSuspects: selectedCase.suspects.filter(s => s.unlocked).map(s => s.id),
       boardConnections: seedConnections,
+      boardPositions: {},
     });
   },
 
