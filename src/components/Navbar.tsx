@@ -20,7 +20,7 @@ export const Navbar = () => {
   const roleLabel = playerId === 'player1' ? 'Detective A' : playerId === 'player2' ? 'Detective B' : null;
 
   return (
-    <nav className="flex justify-between items-center px-6 py-3 bg-gray-900 text-white shadow-md border-b border-gray-800">
+    <nav className="flex flex-col md:flex-row justify-between items-center px-6 py-3 bg-gray-900 text-white shadow-md border-b border-gray-800 gap-3 md:gap-0">
       <div className="flex items-center gap-4">
         <Link href="/" className="text-xl font-bold tracking-widest text-red-500 hover:text-red-400 transition">DUO DETECTIVE</Link>
         <span className="text-xs uppercase tracking-wider text-gray-500 border border-gray-700 px-2 py-0.5 rounded font-mono">

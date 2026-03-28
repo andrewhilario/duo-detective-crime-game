@@ -56,7 +56,11 @@ export const useMultiplayerStore = create<MultiplayerState>((set, get) => ({
 
     socket.on('connect', () => {
       set({ isConnected: true });
-      socket.emit('join-room', roomId, requestedCaseId);
+      socket.emit('join-room', roomId, requestedCaseId, playerId);
+    });
+
+    socket.on('role-assignment', (assignedRole: 'player1' | 'player2') => {
+      set({ playerId: assignedRole });
     });
 
     socket.on('room-info', (caseId: string) => {

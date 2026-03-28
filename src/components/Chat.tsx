@@ -63,7 +63,7 @@ export const Chat = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="w-80 h-96 bg-gray-900 border border-gray-700 rounded-lg shadow-xl mb-4 flex flex-col"
+            className="w-[calc(100vw-2rem)] sm:w-80 h-96 bg-gray-900 border border-gray-700 rounded-lg shadow-xl mb-4 flex flex-col"
           >
             <div className="p-3 border-b border-gray-700 flex justify-between items-center">
               <h3 className="font-semibold text-gray-200 text-sm">Case Chat</h3>

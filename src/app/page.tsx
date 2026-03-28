@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useMultiplayerStore } from '../store/multiplayerStore';
 import { useSessionStore } from '../store/sessionStore';
 import { useCaseStore } from '../store/caseStore';
-import { allCases } from '../data/cases';
+import { allCases, realWorldCases } from '../data/cases';
 import { AudioEngine } from '../utils/sfx';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, ChevronRight, Radio, Lock, BookOpen, Users, User } from 'lucide-react';
@@ -29,7 +29,7 @@ export default function Lobby() {
   const { setPlayerName, setGameStatus } = useSessionStore();
   const { loadCase } = useCaseStore();
 
-  const selectedCase = allCases.find(c => c.id === selectedCaseId)!;
+  const selectedCase = allCases.find(c => c.id === selectedCaseId) || realWorldCases.find(c => c.id === selectedCaseId)!;
 
   const handleJoin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +76,7 @@ export default function Lobby() {
         >
           <div className="flex items-center justify-center gap-3 mb-4">
             <Shield size={28} className="text-red-500" />
-            <h1 className="text-5xl font-bold tracking-[0.25em] text-white uppercase" style={{ fontFamily: 'Playfair Display, serif', textShadow: '0 0 40px rgba(139,30,30,0.6)' }}>
+            <h1 className="text-3xl md:text-5xl font-bold tracking-[0.25em] text-white uppercase" style={{ fontFamily: 'Playfair Display, serif', textShadow: '0 0 40px rgba(139,30,30,0.6)' }}>
               Duo Detective
             </h1>
             <Shield size={28} className="text-red-500" />
@@ -100,6 +100,36 @@ export default function Lobby() {
               <h2 className="font-bold text-white tracking-widest uppercase text-sm">Select Case File</h2>
             </div>
             <div className="overflow-y-auto flex-1">
+              {/* Random Real-World Case Button */}
+              <motion.button
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.15 }}
+                onClick={() => {
+                  AudioEngine.playBeep();
+                  const randomCase = realWorldCases[Math.floor(Math.random() * realWorldCases.length)];
+                  setSelectedCaseId(randomCase.id);
+                }}
+                className={`w-full text-left p-4 border-b border-gray-800/60 flex items-center gap-3 transition group ${
+                  realWorldCases.some(c => c.id === selectedCaseId)
+                    ? 'bg-blue-900/15 text-white'
+                    : 'text-blue-400 hover:bg-gray-800/50 hover:text-blue-200'
+                }`}
+              >
+                <div className={`w-6 h-6 rounded-full border-2 shrink-0 flex items-center justify-center transition ${
+                  realWorldCases.some(c => c.id === selectedCaseId) ? 'border-blue-500 bg-blue-600' : 'border-blue-700 group-hover:border-blue-500'
+                }`}>
+                  {realWorldCases.some(c => c.id === selectedCaseId) && <div className="w-2 h-2 rounded-full bg-white" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-sm truncate uppercase tracking-widest text-blue-300">Play Real-World Mystery</div>
+                  <div className="text-xs text-blue-500 truncate">Random Unsolved Open Case (Google Search required)</div>
+                </div>
+                <span className={`text-xs font-bold px-2 py-0.5 rounded border shrink-0 text-blue-400 border-blue-800 bg-blue-900/20`}>
+                  SPECIAL
+                </span>
+              </motion.button>
+              
               {allCases.map((c, i) => (
                 <motion.button
                   key={c.id}

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCaseStore } from '../../../../store/caseStore';
 import { useMultiplayerStore } from '../../../../store/multiplayerStore';
-import { CheckCircle2, XCircle, ArrowLeft, Shield, Link2, Search } from 'lucide-react';
+import { CheckCircle2, XCircle, ArrowLeft, Shield, Link2, Search, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SuspectAvatar } from '../../../../components/SuspectAvatar';
 
@@ -43,7 +43,7 @@ function SummaryContent({ id }: { id: string }) {
         }`}
       >
         {/* Header */}
-        <div className={`p-10 flex flex-col items-center text-center ${
+        <div className={`p-6 md:p-10 flex flex-col items-center text-center ${
           isCorrect ? 'bg-green-950/40' : 'bg-red-950/30'
         }`}>
           <div className={`w-24 h-24 rounded-full flex items-center justify-center mb-6 ${
@@ -51,7 +51,7 @@ function SummaryContent({ id }: { id: string }) {
           }`}>
             {isCorrect ? <CheckCircle2 size={52} /> : <XCircle size={52} />}
           </div>
-          <h1 className={`text-5xl font-bold mb-3 tracking-widest uppercase ${
+          <h1 className={`text-3xl md:text-5xl font-bold mb-3 tracking-widest uppercase ${
             isCorrect ? 'text-green-400' : 'text-red-400'
           }`}>
             CASE {isCorrect ? 'CLOSED' : 'FAILED'}
@@ -68,7 +68,7 @@ function SummaryContent({ id }: { id: string }) {
         </div>
 
         {/* Culprit reveal */}
-        <div className="px-10 py-6 border-t border-gray-800 flex items-center gap-6">
+        <div className="px-6 md:px-10 py-6 border-t border-gray-800 flex flex-col md:flex-row items-start md:items-center gap-6">
           {!isCorrect && trueCulprit && (
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -111,12 +111,28 @@ function SummaryContent({ id }: { id: string }) {
           )}
         </div>
 
+        {/* Case Explanation */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="px-6 md:px-10 py-6 border-t border-gray-800 bg-gray-900/50"
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <BookOpen size={18} className="text-gray-400" />
+            <h3 className="text-sm font-bold text-gray-300 uppercase tracking-widest">The Truth Revealed</h3>
+          </div>
+          <p className="text-gray-400 text-sm leading-relaxed italic">
+            &quot;{activeCase.explanation}&quot;
+          </p>
+        </motion.div>
+
         {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="px-10 py-6 border-t border-gray-800 grid grid-cols-3 gap-4"
+          className="px-6 md:px-10 py-6 border-t border-gray-800 grid grid-cols-1 md:grid-cols-3 gap-4"
         >
           <div className="bg-gray-800/60 rounded-xl p-4 text-center border border-gray-700">
             <div className="flex justify-center mb-2 text-yellow-500"><Search size={20} /></div>
@@ -136,7 +152,7 @@ function SummaryContent({ id }: { id: string }) {
         </motion.div>
 
         {/* Footer */}
-        <div className="px-10 py-6 border-t border-gray-800 flex justify-center">
+        <div className="px-6 md:px-10 py-6 border-t border-gray-800 flex justify-center">
           <Link
             href={`/case/${id}`}
             className="flex items-center gap-2 text-gray-400 hover:text-white font-bold tracking-widest uppercase transition group"

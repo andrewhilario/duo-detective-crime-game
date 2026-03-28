@@ -33,12 +33,21 @@ app.prepare().then(() => {
   io.on('connection', (socket) => {
     console.log('Client connected:', socket.id);
 
-    socket.on('join-room', (roomId, requestedCaseId) => {
+    socket.on('join-room', (roomId, requestedCaseId, requestedRole) => {
       socket.join(roomId);
       if (!rooms[roomId]) {
-        rooms[roomId] = { caseId: requestedCaseId || 'c1' };
+        rooms[roomId] = { caseId: requestedCaseId || 'c1', players: {} };
       }
-      console.log(`Socket ${socket.id} joined room ${roomId} (Case: ${rooms[roomId].caseId})`);
+      
+      let assignedRole = requestedRole || 'player1';
+      if (rooms[roomId].players[assignedRole]) {
+         assignedRole = assignedRole === 'player1' ? 'player2' : 'player1';
+      }
+      rooms[roomId].players[assignedRole] = socket.id;
+      
+      console.log(`Socket ${socket.id} joined room ${roomId} (Case: ${rooms[roomId].caseId}) as ${assignedRole}`);
+      socket.emit('role-assignment', assignedRole);
+      
       io.to(roomId).emit('player-joined', socket.id);
       socket.emit('room-info', rooms[roomId].caseId);
     });
@@ -57,6 +66,15 @@ app.prepare().then(() => {
 
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id);
+      
+      // Remove player from any room state
+      for (const roomId in rooms) {
+        if (rooms[roomId].players) {
+          if (rooms[roomId].players.player1 === socket.id) delete rooms[roomId].players.player1;
+          if (rooms[roomId].players.player2 === socket.id) delete rooms[roomId].players.player2;
+        }
+      }
+
       // Prune empty rooms to prevent unbounded memory growth.
       // socket.io has already removed this socket from all rooms by the time
       // the disconnect event fires, so we can check adapter room sizes directly.

@@ -40,6 +40,7 @@ export interface CaseData {
   clues: Clue[];
   suspects: Suspect[];
   trueCulpritId: string;
+  explanation: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -94,6 +95,7 @@ const case1: CaseData = {
     },
   ],
   trueCulpritId: 'c1_s2',
+  explanation: 'Marcus Renn bypassed his own alarm system during the precision power outage. He possessed the specialized knowledge required to flawlessly sever the fiber-optic security cable cleanly. Frustrated by budget cuts and unresolved disputes with the Director, Renn conspired to steal and flip the artwork, framing the fired delivery driver by stealing his van and causing the tread marks.',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -154,6 +156,7 @@ const case2: CaseData = {
     },
   ],
   trueCulpritId: 'c2_s1',
+  explanation: 'Det. Richard Harris was the original 1987 killer, using his position as lead investigator to derail the initial case. When Nora Vass\'s reporting got too close to uncovering his secret (he was the "highly decorated copycat"), Harris killed her, planting the 1987 photograph. He mistakenly slipped up by framing Victor Dray by taking his silver lighter, but Harris\'s deep knowledge of the crime and failure to fully destroy Nora\'s encrypted findings sealed his fate.',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -208,7 +211,8 @@ const case3: CaseData = {
     },
   ],
   trueCulpritId: 'c3_s2',
-};
+  explanation: 'Julian Fenn slipped cyanide into his uncle\'s drink, bribing the waitress before Harold retreated to his cabin. Knowing he was about to be written out of the will, Julian acted hastily before the new will was filed. The heavy ring on his hand matched the waitress\'s description, and his feigned surprise at the altered will exposed his premeditated motive.',
+};;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CASE 4  ·  The Red Ledger  (Medium)
@@ -262,6 +266,7 @@ const case4: CaseData = {
     },
   ],
   trueCulpritId: 'c4_s1',
+  explanation: 'Arthur Crane disguised his flight to Geneva, doubling back to orchestrate the murder of his CFO before the whistle could be blown. He used Miriam\'s security protocols to loop cameras and had Douglas Park\'s car model cloned. Despite meticulously pinning motives on his employees, it was Crane\'s second signature on the shredded offshore documents and his personal letter opener that confirmed his involvement.',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -317,6 +322,7 @@ const case5: CaseData = {
     },
   ],
   trueCulpritId: 'c5_s2',
+  explanation: 'Dr. Hana Mori poisoned Ivy to stop the devastating peer review that would ruin her academic career. Using her deep botanical expertise, she extracted aconite from the estate\'s wolfsbane patches, preparing the lethal dose in her guest cottage clinic safely using latex gloves, before slipping it into Ivy\'s elderflower cordial during the tour.',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -371,6 +377,7 @@ const case6: CaseData = {
     },
   ],
   trueCulpritId: 'c6_s2',
+  explanation: 'Claude Devereaux laced his monogrammed flask with strong sedatives and tricked Renard into taking a "celebratory drink" to incapacitate him. Fearing total loss of his 30% revenue share due to the new rival contract, Claude used the very garrote wire from his client\'s own stage props to strangle him, successfully making it look like a tragic accident disguised by his lobby alibi.',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -425,10 +432,120 @@ const case7: CaseData = {
     },
   ],
   trueCulpritId: 'c7_s2',
+  explanation: 'Ray Hollis knew his entire life would be ruined if the falsified polling data got leaked to the press. Cornering the whistleblower on the transmitter roof, he staged a struggle that ended when he pushed her. Ray deliberately printed a fake server access log 45 minutes later using her stolen credentials to craft an alibi, and abandoned her laptop in the lot.',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // EXPORTS
 // ─────────────────────────────────────────────────────────────────────────────
 export const allCases: CaseData[] = [case1, case2, case3, case4, case5, case6, case7];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// REAL WORLD CASES (Designed for Google Search Gameplay)
+// ─────────────────────────────────────────────────────────────────────────────
+const case8: CaseData = {
+  id: 'rw_c1',
+  title: 'The Hijacking of Flight 305',
+  setting: 'Northwest Orient Airlines, Washington State',
+  briefing: 'A man calling himself Dan Cooper hijacked a Boeing 727, demanded $200,000 in ransom, and parachuted out over the Pacific Northwest. He was never found. Use Google to uncover the true facts surrounding this real-world mystery and identify the most likely suspect based on the evidence.',
+  difficulty: 'Hard',
+  timeline: [
+    { time: '1971-11-24 2:50 PM', event: 'Cooper hands note to flight attendant Florence Schaffner' },
+    { time: '1971-11-24 5:39 PM', event: 'Flight lands in Seattle; passengers exchanged for ransom and parachutes' },
+    { time: '1971-11-24 7:40 PM', event: 'Flight takes off towards Mexico City' },
+    { time: '1971-11-24 8:13 PM', event: 'The aft airstair deploys; Cooper jumps' },
+  ],
+  locations: ['Seat 18C', 'Seattle-Tacoma Airport', 'Aft Airstair', 'Tena Bar, Columbia River'],
+  clues: [
+    { id: 'rw1_cl1', name: 'J.C. Penney Tie', description: 'A black clip-on tie with a mother-of-pearl tie clip left on Cooper\'s seat (18C). Search Google: What specific rare particle was found on the tie decades later that pointed to specialized industrial work?', location: 'Seat 18C', reliability: 'High', connections: ['rw1_cl3'], visibleTo: 'all', icon: 'rope' },
+    { id: 'rw1_cl2', name: 'Ransom Money Fragment', description: 'Search Google: In 1980, a young boy named Brian Ingram found a bundle of weathering $20 bills along the Columbia River. The serial numbers matched the ransom. What does this suggest about Cooper\'s survival?', location: 'Tena Bar, Columbia River', reliability: 'High', connections: [], visibleTo: 'player1', icon: 'bag' },
+    { id: 'rw1_cl3', name: 'Titanium Particles', description: 'Microscopic analysis of the tie revealed pure titanium dust. In 1971, titanium was extremely rare and only used in specialized aerospace or chemical facilities. Who worked at such a facility?', location: 'Seat 18C', reliability: 'High', connections: ['rw1_cl1'], visibleTo: 'player2', icon: 'vial' },
+    { id: 'rw1_cl4', name: 'Dan Cooper Comic', description: 'The alias "Dan Cooper" might correspond to a French-language Belgian comic book about a Royal Canadian Air Force pilot who does heroic parachute jumps. Which suspect has Canadian ties or served in a similar capacity?', location: 'Seattle-Tacoma Airport', reliability: 'Medium', connections: [], visibleTo: 'all', icon: 'document' },
+  ],
+  suspects: [
+    {
+      id: 'rw1_s1', name: 'Richard Floyd McCoy Jr.', age: 29, occupation: 'Army Helicopter Pilot / Skydiver',
+      profile: 'Arrested 5 months later for a near-identical hijacking of United Flight 855 where he also parachuted with ransom money. He was an avid skydiver and former Green Beret.',
+      alibi: 'McCoy was eating Thanksgiving dinner with his family in Utah the day after the Cooper hijacking.',
+      relationships: 'Matched the physical description loosely, but had no specific ties to the titanium industry.',
+      unlocked: true, unlockedByClues: [],
+      responses: { 'rw1_cl1': 'I was in Utah. I had nothing to do with that clip-on tie.' },
+      avatar: { photoUrl: 'https://randomuser.me/api/portraits/men/44.jpg' }
+    },
+    {
+      id: 'rw1_s2', name: 'Sheridan Peterson', age: 44, occupation: 'Aerospace Technical Editor',
+      profile: 'Worked at Boeing in Seattle exactly when the 727 was designed. He understood the aft airstair mechanism. He was an experienced smokejumper and skydiver, matching the physical description perfectly.',
+      alibi: 'Claims he was living in a mud hut in Nepal during the hijacking.',
+      relationships: 'Had direct access to aerospace facilities (titanium exposure) and the knowledge required to pull off the jump.',
+      unlocked: false, unlockedByClues: ['rw1_cl3'],
+      responses: { 'rw1_cl3': 'Yes, I worked at Boeing. And yes, I was a smokejumper. The FBI interviewed me, but I was in Nepal.' },
+      avatar: { photoUrl: 'https://randomuser.me/api/portraits/men/82.jpg' }
+    },
+    {
+      id: 'rw1_s3', name: 'Duane Weber', age: 47, occupation: 'Career Criminal / WWII Veteran',
+      profile: 'On his deathbed, confessed to his wife, "I am Dan Cooper." His wife later found a Northwest Airlines ticket hidden in their house, and he frequently visited the area where the money was found.',
+      alibi: 'No confirmed alibi for November 24, 1971, as he was moving between states.',
+      relationships: 'Had a criminal background but lacked the specialized titanium exposure or parachute training.',
+      unlocked: false, unlockedByClues: ['rw1_cl2'],
+      responses: { 'rw1_cl2': 'I spent time in prison near that river area. It\'s just a coincidence.' },
+      avatar: { photoUrl: 'https://randomuser.me/api/portraits/men/68.jpg' }
+    },
+  ],
+  trueCulpritId: 'rw1_s2',
+  explanation: 'While D.B. Cooper was never officially identified, many modern investigators consider Sheridan Peterson the strongest suspect. He worked at Boeing, specifically writing manuals for the 727 (explaining his knowledge of the aft stair). He was an expert skydiver, matched the age and sketch, and had exposure to aerospace facilities containing titanium. The FBI DNA tests were inconclusive, leaving this as one of history\'s greatest mysteries.',
+};
+
+const case9: CaseData = {
+  id: 'rw_c2',
+  title: 'The Somerton Man',
+  setting: 'Somerton Beach, Adelaide, Australia',
+  briefing: 'In 1948, an unidentified man was found dead on a beach. He had no ID, the labels were cut out of his clothes, and a scrap of paper reading "Tamám Shud" was found in his pocket. Use Google to uncover the real-world facts of this Cold War enigma and identify who he truly was.',
+  difficulty: 'Hard',
+  timeline: [
+    { time: '1948-11-30 7:00 PM', event: 'Couple spots the man lying motionless on the beach' },
+    { time: '1948-12-01 6:30 AM', event: 'Police discover the body. No signs of struggle, suspected poisoning' },
+    { time: '1949-01-14', event: 'Adelaide Railway Station discovers a brown suitcase deposited by the man' },
+    { time: '1949-04-19', event: 'The "Tamám Shud" scrap is discovered hidden in his fob pocket' },
+  ],
+  locations: ['Somerton Beach', 'Adelaide Railway Station', 'Glenelg', 'The Rubaiyat Book'],
+  clues: [
+    { id: 'rw2_cl1', name: 'Tamám Shud Scrap', description: 'A rolled-up scrap of paper reading "Tamám Shud" (meaning "ended" or "finished" in Persian) found in the dead man\'s pocket. Search Google: What specific book was this torn from, and who found the exact copy it belonged to?', location: 'Somerton Beach', reliability: 'High', connections: ['rw2_cl2'], visibleTo: 'all', icon: 'document' },
+    { id: 'rw2_cl2', name: 'The Secret Code', description: 'The back cover of the Rubaiyat book contained faint indentations of a strange 5-line code (starting with WRGOABABD). Search Google: Was this an unbreakable Cold War spy cipher, or just personal shorthand?', location: 'The Rubaiyat Book', reliability: 'High', connections: ['rw2_cl1'], visibleTo: 'player1', icon: 'note' },
+    { id: 'rw2_cl3', name: 'Jessica Thomson (Jestyn)', description: 'Search Google: The book also contained an unlisted phone number belonging to a nurse in Glenelg named Jessica Thomson. She lived just 400m from the beach. What was her reaction when police showed her the dead man\'s plaster bust?', location: 'Glenelg', reliability: 'High', connections: [], visibleTo: 'player2', icon: 'phone' },
+    { id: 'rw2_cl4', name: 'DNA Identification 2022', description: 'Search Google: In 2022, Professor Derek Abbott used DNA extracted from the Somerton Man\'s hair to construct a family tree. It traced back to a specific man with the surname Webb. Who was he actually?', location: 'Somerton Beach', reliability: 'High', connections: [], visibleTo: 'all', icon: 'vial' },
+  ],
+  suspects: [
+    {
+      id: 'rw2_s1', name: 'Alf Boxall', age: 42, occupation: 'Australian Intelligence Intelligence',
+      profile: 'Early investigators suspected the dead man was Boxall, an Australian intelligence officer. Jessica Thomson had gifted Boxall a copy of the Rubaiyat.',
+      alibi: 'Boxall was found alive and well in Sydney in 1949, with his copy of the Rubaiyat (and its Tamám Shud page) completely intact.',
+      relationships: 'He knew Jessica Thomson during the war but had no connection to the dead man.',
+      unlocked: true, unlockedByClues: [],
+      responses: { 'rw2_cl1': 'I am perfectly alive. The police already verified I still have my copy of the book.' },
+      avatar: { photoUrl: 'https://randomuser.me/api/portraits/men/33.jpg' }
+    },
+    {
+      id: 'rw2_s2', name: 'Carl Webb', age: 43, occupation: 'Electrical Engineer / Instrument Maker',
+      profile: 'A man from Melbourne with a background in electrical engineering who loved poetry and had a penchant for making bets (potentially explaining the code). He disappeared from his family in 1947.',
+      alibi: 'His exact movements in 1948 are unknown, but DNA evidence links directly to him.',
+      relationships: 'Had a brother-in-law named Thomas Keane, which explains why the name "T. Keane" was written on his tie and laundry bag.',
+      unlocked: false, unlockedByClues: ['rw2_cl4'],
+      responses: { 'rw2_cl4': '...' }, // Dead men tell no tales
+      avatar: { photoUrl: 'https://randomuser.me/api/portraits/men/50.jpg' }
+    },
+    {
+      id: 'rw2_s3', name: 'Prosper Thomson', age: 45, occupation: 'Car Salesman',
+      profile: 'Jessica Thomson\'s future husband. Some theorists suggested he discovered an affair between Jessica and the Somerton Man and poisoned him.',
+      alibi: 'No formal alibi, but police never considered him a suspect at the time.',
+      relationships: 'Jessica was extremely evasive with police and nearly fainted seeing the bust. Prosper eventually married her in 1950.',
+      unlocked: false, unlockedByClues: ['rw2_cl3'],
+      responses: { 'rw2_cl3': 'My wife didn\'t know that man. Whatever she was hiding, it wasn\'t murder.' },
+      avatar: { photoUrl: 'https://randomuser.me/api/portraits/men/11.jpg' }
+    },
+  ],
+  trueCulpritId: 'rw2_s2',
+  explanation: 'In 2022, DNA analysis finally revealed that the Somerton Man was Carl Webb, a 43-year-old electrical engineer and instrument maker from Melbourne. He was not a Russian spy. He had a fondness for poetry, which explains the Rubaiyat, and he likely traveled to Adelaide to track down his estranged wife. The "unbreakable code" on the book is now largely believed to be the initial letters of horses he was betting on, or personal shorthand.',
+};
+
+export const realWorldCases: CaseData[] = [case8, case9];
 

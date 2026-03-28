@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { CaseData, allCases, Clue, Suspect } from '../data/cases';
+import { CaseData, allCases, realWorldCases, Clue, Suspect } from '../data/cases';
 
 interface CaseState {
   activeCase: CaseData | null;
@@ -25,7 +25,7 @@ export const useCaseStore = create<CaseState>((set, get) => ({
   boardPositions: {},
 
   loadCase: (caseId) => {
-    const selectedCase = allCases.find(c => c.id === caseId) || allCases[0];
+    const selectedCase = allCases.find(c => c.id === caseId) || realWorldCases.find(c => c.id === caseId) || allCases[0];
 
     // Seed board connections from the clue data's pre-suggested `connections` arrays.
     // Deduplicate: always store with the lower-sorted id as `source` so we never
